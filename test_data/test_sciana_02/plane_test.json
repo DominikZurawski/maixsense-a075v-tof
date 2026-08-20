@@ -1,0 +1,14 @@
+{
+  "capture_stem": "a075v_20260720T151804_frame0",
+  "metrics": {
+    "point_count": 4800,
+    "z_center_mm": 137.0,
+    "range_center_mm": 137.03353881835938,
+    "plane_distance_mm": 135.83511352539062,
+    "normal_angle_deg": 0.4182465672492981,
+    "rms_error_mm": 3.18233585357666,
+    "center_median_mm": 136.75,
+    "edge_median_mm": 136.25,
+    "edge_minus_center_percent": -0.3656307129798903
+  }
+}

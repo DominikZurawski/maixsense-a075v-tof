@@ -1,0 +1,19 @@
+{
+  "purpose": "Supplementary camera resources captured with an A075V test frame.",
+  "capture_stem": "a075v_20260720T151655_frame0",
+  "resources": {
+    "CameraParms.json": {
+      "bytes": 833,
+      "sha256": "46c6cb35d8614f636d2eb5437a98cb10e8d5c21f574e0a174086e323073a2404"
+    },
+    "getinfo.bin": {
+      "bytes": 81,
+      "sha256": "835776ce763f25de14fe4a4c0819e63bcacdd3a7ec07a1258d93214c0d88cab3"
+    },
+    "get_lut.bin": {
+      "bytes": 76800,
+      "sha256": "4041e8003e78cc804f7e31dcf2e73daf0076823fbe1d61894838483505cef28b"
+    }
+  },
+  "unavailable_resources": {}
+}

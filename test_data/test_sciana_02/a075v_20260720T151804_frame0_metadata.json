@@ -1,0 +1,47 @@
+{
+  "captured_at_utc": "2026-07-20T13:18:04.724489+00:00",
+  "frame_id": 0,
+  "camera_timestamp_ms": 3318480,
+  "stream_config": {
+    "trigger_mode": 1,
+    "depth_mode": 0,
+    "depth_shift": 255,
+    "ir_mode": 1,
+    "status_mode": 2,
+    "status_mask": 7,
+    "rgb_mode": 0,
+    "rgb_resolution": 0,
+    "exposure_time": 0
+  },
+  "depth_metrics": {
+    "valid_pixels": 76800,
+    "valid_percent": 100.0,
+    "minimum": 146,
+    "median": 543.0,
+    "maximum": 2600,
+    "center": 548
+  },
+  "depth_visual_range": {
+    "min": 520,
+    "max": 568
+  },
+  "rgb": {
+    "payload_bytes": 720000,
+    "decoded": true,
+    "shape": [
+      600,
+      800,
+      3
+    ]
+  },
+  "calibration": {
+    "available": true,
+    "path": "vendor/sipeed_a075v/CameraParms.json",
+    "rgb_intrinsics": {
+      "fx": 515.954119900099,
+      "fy": 516.1748999450596,
+      "cx": 393.4644586140505,
+      "cy": 268.26615017912405
+    }
+  }
+}

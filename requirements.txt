@@ -1,0 +1,4 @@
+# Zależności uruchomieniowe aplikacji (Python 3.10+)
+numpy
+opencv-python
+requests

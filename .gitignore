@@ -1,0 +1,27 @@
+# Python and local development files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Artefacts created while using the camera (can be large and may contain scenes)
+logs/
+captures/
+exports/
+pointclouds/
+recordings/
+
+# Local backup and archives supplied by / captured from the device.
+# Do not publish them until their licence and redistribution terms are verified.
+camera_original/
+camera_original.zip
+*.zip
+
+# Keep selected, documented samples in test_data/, but do not add new ad-hoc bundles by default.
+test_data/*/*.raw
+test_data/*/*_depth.npy
+test_data/*/*_ir.npy
+test_data/*/*_status.npy
+test_data/*/*_rgb.yuv
