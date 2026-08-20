@@ -12,6 +12,7 @@ captures/
 exports/
 pointclouds/
 recordings/
+test_data/
 
 # Local backup and archives supplied by / captured from the device.
 # Do not publish them until their licence and redistribution terms are verified.

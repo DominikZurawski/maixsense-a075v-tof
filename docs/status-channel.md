@@ -1,44 +1,46 @@
 # Kanał Status — MaixSense-A075V
 
-## Najkrótsze wyjaśnienie
+## Najważniejsze
 
-**Status RAW nie jest obrazem odległości ani gotową informacją „dobry/zły piksel”.** Jest to pomocnicza mapa danych używana przez algorytm kalibracji producenta. Oryginalny program przekazuje ją razem z głębią do kalibratora `TOF_cali`; dopiero po tym kroku powstają zrozumiałe klasy jakości punktu.
+Widok **Status RAW** nie pokazuje odległości ani prostego komunikatu, czy
+pomiar danego piksela jest dobry lub błędny. Jest to dodatkowa mapa liczb
+przekazywana przez kamerę. Producent wykorzystuje ją we własnym etapie
+przetwarzania, ale nie opisał publicznie znaczenia każdej liczby.
 
-Nasz Python zapisuje i pokazuje wejście do tego kroku kalibracji. Jest to użyteczne do badań, ale bez uruchomienia `TOF_cali` nie można uczciwie odczytać znaczenia pojedynczej liczby.
+Dlatego ten program zapisuje i wyświetla wartości Status bez ich
+interpretowania. Nie należy na przykład zakładać, że wartość `17` oznacza
+konkretny rodzaj błędu.
 
-## Co odbiera program
+## Co odbiera i zapisuje program
 
-Każda klatka A075V zawiera mapę Status o rozdzielczości 320×240. W domyślnej
-konfiguracji `status_mode=2` jest to jeden bajt na piksel. Pythonowy program
-zapisuje jej niezmienione wartości do `*_status.npy` i do pola `status` w
-telemetrii JSONL.
+Każda klatka A075V zawiera mapę Status o rozdzielczości 320×240 — po jednej
+liczbie dla każdego piksela obrazu głębi. W zwykłym trybie jest to liczba od
+0 do 255. Program zapisuje ją bez zmian w pliku `*_status.npy` oraz dodaje
+jej podsumowanie do pola `status` w pliku z logiem.
 
-Widok `STATUS RAW` pokazuje te bajty kolorem fałszywym Viridis: liczba `0`
-jest jednym końcem palety, `255` drugim, a wartości pośrednie dostają kolory
-pośrednie. Kolor służy wyłącznie do łatwego zauważenia obszarów o podobnych
-kodach — **nie oznacza odległości i nie jest jeszcze klasyfikacją jakości**.
+Widok `STATUS RAW` zamienia liczby na umowne kolory, aby łatwiej zauważyć
+obszary o podobnych wartościach. Kolory nie oznaczają odległości ani jakości
+pomiaru: są tylko sposobem wyświetlania liczb.
 
-## Co robi oryginalny program (kalibracja)
+## Dlaczego program nie pokazuje „dobrych” i „złych” pikseli
 
-Producent nie opublikował w dokumentacji kompletnej tabeli znaczeń każdego
-surowego kodu Status. Dlatego program nie opisuje obecnie np. „kod 17” jako
-konkretnej usterki pomiaru. To byłoby zgadywanie.
+Oryginalny program producenta przekazuje Status razem z mapą głębi do funkcji
+`TOF_cali` z pliku `calibration.wasm`. Jej wynik dzieli piksele na kilka
+kategorii, między innymi `normal`, `bad` i `invalid`.
 
-Oryginalny `viewdeep.html` wywołuje funkcję `TOF_cali` z pliku
-`calibration.wasm`. Dopiero wynik tej funkcji traktuje jako klasy stanu:
-`0` normal, `1` UE, `2` OE, `3` bad i `5` invalid. UE/OE są nazwami użytymi
-przez Sipeed; kod źródłowy nie rozwija ich pełnych nazw. Te klasy nie mogą być
-bezpiecznie przypisane bezpośrednio do surowych bajtów odbieranych przez nasz
-program.
+Nie znamy jednak publicznej tabeli, która mówiłaby, jak pojedyncza surowa
+wartość Status ma się do tych kategorii. Nazwy `UE` i `OE`, widoczne w
+oryginalnym programie, także nie są rozwinięte w dokumentacji Sipeed.
+Przypisanie kategorii na podstawie samej liczby byłoby więc zgadywaniem.
 
-## Jak używać w badaniach
+## Jak z niego korzystać
 
-1. Zapisz jednocześnie RAW, Depth, IR i Status (`s` lub `--record-raw-dir`).
-2. Porównuj powtarzalne obszary i zmiany kodów Status z błędami/nagłymi
-   zmianami głębi oraz IR.
-3. Traktuj kanał jako materiał diagnostyczny do własnej walidacji, dopóki nie
-   zintegrujemy lub nie odtworzymy kalibratora `TOF_cali`.
+1. Zapisz jednocześnie dane Status, głębi, IR i pełny pakiet z kamery
+   (klawisz `s` albo opcja `--record-raw-dir`).
+2. Obserwuj, czy zmiana wartości Status występuje w tych samych miejscach co
+   brak głębi, skoki odległości lub słaby obraz IR.
+3. Traktuj ją jako wskazówkę pomocniczą, a nie ocenę poprawności pomiaru.
 
-Następnym poprawnym etapem jest niezależna implementacja tej części kalibracji
-albo udokumentowane wywołanie jej z WASM; dopiero wtedy widok może uczciwie
-pokazywać dyskretne klasy jakości.
+Aby wiarygodnie pokazać kategorie jakości, trzeba byłoby odtworzyć działanie
+funkcji producenta albo skorzystać z jej opisanej wersji. Dopiero wtedy można
+by przypisać pikselom znaczenie takie jak „prawidłowy” lub „nieważny”.

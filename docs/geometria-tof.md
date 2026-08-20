@@ -45,10 +45,14 @@ wewnętrzny etap sensora nie jest udostępniony przez publiczny protokół kamer
 
 ## Nachylenie powierzchni
 
-Kamera nie mierzy bezpośrednio normalnej powierzchni. Nachylenie obiektu może
-osłabić odbicie IR i zwiększyć szum lub liczbę nieważnych pikseli, lecz kamera
-nie ma osobnego „czujnika kąta normalnej”. Normalne można oszacować dopiero z
-różnic XYZ sąsiednich pikseli.
+Kamera nie mierzy bezpośrednio kąta, pod jakim znajduje się powierzchnia. Dla
+przykładu: ściana ustawiona dokładnie frontem do kamery ma nachylenie 0°,
+a obrócona ściana — większe nachylenie. Nachylenie może osłabić odbicie IR i
+zwiększyć szum lub liczbę nieważnych pikseli.
+
+Kąt ten program wyznacza dopiero z wielu zmierzonych punktów 3D: dopasowuje
+do nich płaszczyznę, a potem porównuje jej ustawienie z kierunkiem, w którym
+patrzy kamera. Kamera nie ma osobnego czujnika mierzącego to nachylenie.
 
 ## Test płaskiej powierzchni
 
@@ -59,7 +63,7 @@ różnic XYZ sąsiednich pikseli.
 4. Program obliczy płaszczyznę metodą najmniejszych kwadratów i pokaże:
    - `Zc` — głębię osiową środkowego piksela;
    - `R` — odległość środkowego piksela po promieniu;
-   - `tilt` — kąt normalnej dopasowanej płaszczyzny względem osi kamery;
+   - `tilt` — kąt nachylenia dopasowanej płaszczyzny względem kamery;
    - `RMS` — typowy błąd punktów względem płaszczyzny.
    - `edge-centre` — różnicę mediany głębi na bocznych brzegach i w centrum.
 
@@ -72,14 +76,21 @@ warto wykonywać zarówno z filtrem wyłączonym, jak i włączonym.
 
 ## Co ten test mówi o pytaniu „po promieniu czy po osi?”
 
-Fizyka ToF zawsze zaczyna od drogi światła **po promieniu piksela**. Sensor
-nie zna normalnej powierzchni i nie wykonuje korekcji zależnej od tej normalnej.
-Nachylona powierzchnia może jedynie słabiej odbijać światło, przez co rośnie
-szum lub liczba błędnych punktów.
+Każdy piksel kamery patrzy w trochę innym kierunku. **Odległość po promieniu**
+to długość prostej od kamery do punktu, właśnie w kierunku danego piksela.
+**Głębia po osi** to natomiast odległość punktu mierzona tylko w kierunku,
+w którym patrzy środek kamery — jak odległość ściany od obiektywu po prostej
+prostopadłej do jej matrycy.
+
+Fizyka ToF zaczyna od drogi światła po promieniu piksela. Czujnik nie mierzy
+jednak osobno nachylenia obiektu i nie poprawia odległości zależnie od tego,
+czy ściana jest obrócona. Nachylona powierzchnia może jedynie słabiej odbijać
+światło, przez co rośnie szum lub liczba błędnych punktów.
 
 Następnie oprogramowanie kamery może przeliczyć odległość po promieniu na
-głębię osiową Z, korzystając z **znanego kąta piksela względem osi optycznej**.
-To jest korekcja geometrii kamery, a nie korekcja względem normalnej obiektu.
+głębię osiową Z, korzystając z kąta, pod którym dany piksel patrzy względem
+środka obrazu. Jest to zwykłe przeliczenie geometrii kamery, niezależne od
+nachylenia fotografowanej powierzchni.
 
 Płaska ściana prostopadła do kamery daje prosty eksperyment. Dla mapy po
 promieniu wartości na brzegach powinny być wyraźnie większe niż w centrum:
